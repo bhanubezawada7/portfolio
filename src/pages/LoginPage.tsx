@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { isAuthorizedAdminEmail } from '../services/authService';
 import { Lock, Mail, User, Eye, EyeOff, ArrowLeft, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { Button } from '../components/common/Button';
 
@@ -14,8 +15,15 @@ export const LoginPage: React.FC = () => {
   const [resetSent, setResetSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { login, register, loginGoogle, resetPassword } = useAuth();
+  const { user, isAdmin, login, register, loginGoogle, resetPassword } = useAuth();
   const navigate = useNavigate();
+
+  // If already authenticated with admin permissions, auto-redirect to admin dashboard
+  useEffect(() => {
+    if (user && isAdmin) {
+      navigate('/admin', { replace: true });
+    }
+  }, [user, isAdmin, navigate]);
 
   const getFriendlyError = (err: any): string => {
     const code = err?.code || '';
@@ -46,7 +54,24 @@ export const LoginPage: React.FC = () => {
       if (isRegister) {
         await register(email, password, displayName);
       } else {
-        await login(email, password);
+        try {
+          await login(email, password);
+        } catch (loginErr: any) {
+          const errCode = loginErr?.code || '';
+          // If authorized admin email and user doesn't exist yet, auto-register for seamless first-time onboarding
+          if (
+            (errCode === 'auth/user-not-found' || errCode === 'auth/invalid-credential') &&
+            isAuthorizedAdminEmail(email)
+          ) {
+            try {
+              await register(email, password, displayName || 'Bhausri Bezawada');
+            } catch {
+              throw loginErr;
+            }
+          } else {
+            throw loginErr;
+          }
+        }
       }
       navigate('/admin');
     } catch (err: any) {
@@ -208,7 +233,7 @@ export const LoginPage: React.FC = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="bhanubezawada1@gmail.com"
+                  placeholder="bhanu1@gmail.com"
                   className="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-9 pr-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>

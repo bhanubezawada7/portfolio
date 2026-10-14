@@ -35,5 +35,14 @@ export { app, auth, db };
 
 export const ADMIN_CONFIG = {
   adminUid: import.meta.env.VITE_ADMIN_UID || "rcbd1D9HHRPjSVMFrwnCNy0frYm1",
-  adminEmail: import.meta.env.VITE_ADMIN_EMAIL || "bhanubezawada1@gmail.com"
+  adminEmail: import.meta.env.VITE_ADMIN_EMAIL?.split(',')[0]?.trim() || "bhanu1@gmail.com",
+  adminEmails: [
+    "bhanu1@gmail.com",
+    "bhanubezawada1@gmail.com",
+    "bhanusri15@gmail.com",
+    ...(import.meta.env.VITE_ADMIN_EMAIL
+      ? import.meta.env.VITE_ADMIN_EMAIL.split(',').map((e: string) => e.trim().toLowerCase())
+      : [])
+  ]
 };
+

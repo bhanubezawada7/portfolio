@@ -19,6 +19,7 @@ interface AuthContextType {
   loginGoogle: () => Promise<User>;
   signOutUser: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
+  refreshAdminStatus: () => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -74,6 +75,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await sendResetPassword(email);
   };
 
+  const refreshAdminStatus = async (): Promise<boolean> => {
+    if (auth.currentUser) {
+      const status = await checkIsAdmin(auth.currentUser);
+      setIsAdmin(status);
+      return status;
+    }
+    setIsAdmin(false);
+    return false;
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -84,7 +95,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         register,
         loginGoogle,
         signOutUser,
-        resetPassword
+        resetPassword,
+        refreshAdminStatus
       }}
     >
       {children}

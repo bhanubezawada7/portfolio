@@ -10,8 +10,33 @@ import {
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db, googleProvider, ADMIN_CONFIG } from '../config/firebase';
 
+export function isAuthorizedAdminEmail(email?: string | null): boolean {
+  if (!email) return false;
+  const normalized = email.trim().toLowerCase();
+  const allowed = [
+    'bhanu1@gmail.com',
+    'bhanubezawada1@gmail.com',
+    'bhanusri15@gmail.com',
+    ADMIN_CONFIG.adminEmail.toLowerCase(),
+    ...(ADMIN_CONFIG.adminEmails ? ADMIN_CONFIG.adminEmails.map((e: string) => e.toLowerCase()) : [])
+  ];
+  return allowed.includes(normalized);
+}
+
 export async function loginWithEmail(email: string, pass: string): Promise<User> {
   const cred = await signInWithEmailAndPassword(auth, email, pass);
+  if (cred.user && (isAuthorizedAdminEmail(cred.user.email) || cred.user.uid === ADMIN_CONFIG.adminUid)) {
+    try {
+      await setDoc(doc(db, 'users', cred.user.uid), {
+        uid: cred.user.uid,
+        email: cred.user.email,
+        role: 'admin',
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+    } catch (err) {
+      console.warn('Could not sync admin role in Firestore on login:', err);
+    }
+  }
   return cred.user;
 }
 
@@ -23,7 +48,7 @@ export async function registerWithEmail(email: string, pass: string, displayName
 
   // Record user profile in Firestore
   try {
-    const isOwner = cred.user.uid === ADMIN_CONFIG.adminUid || email.toLowerCase() === ADMIN_CONFIG.adminEmail.toLowerCase();
+    const isOwner = cred.user.uid === ADMIN_CONFIG.adminUid || isAuthorizedAdminEmail(email);
     await setDoc(doc(db, 'users', cred.user.uid), {
       uid: cred.user.uid,
       email: cred.user.email,
@@ -42,7 +67,7 @@ export async function signInWithGoogle(): Promise<User> {
   const cred = await signInWithPopup(auth, googleProvider);
   if (cred.user) {
     try {
-      const isOwner = cred.user.uid === ADMIN_CONFIG.adminUid || cred.user.email?.toLowerCase() === ADMIN_CONFIG.adminEmail.toLowerCase();
+      const isOwner = cred.user.uid === ADMIN_CONFIG.adminUid || isAuthorizedAdminEmail(cred.user.email);
       await setDoc(doc(db, 'users', cred.user.uid), {
         uid: cred.user.uid,
         email: cred.user.email,
@@ -73,8 +98,19 @@ export async function checkIsAdmin(user: User | null): Promise<boolean> {
     return true;
   }
 
-  // 2. Check verified admin email
-  if (user.email && user.email.toLowerCase() === ADMIN_CONFIG.adminEmail.toLowerCase()) {
+  // 2. Check authorized admin email (e.g. bhanu1@gmail.com)
+  if (isAuthorizedAdminEmail(user.email)) {
+    // Proactively persist role: 'admin' in Firestore so subsequent checks and rules succeed
+    try {
+      await setDoc(doc(db, 'users', user.uid), {
+        uid: user.uid,
+        email: user.email,
+        role: 'admin',
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+    } catch (e) {
+      // ignore
+    }
     return true;
   }
 
@@ -100,3 +136,4 @@ export async function checkIsAdmin(user: User | null): Promise<boolean> {
 
   return false;
 }
+

@@ -1,7 +1,7 @@
-import React from 'react';
-import { Navigate, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Navigate, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { ShieldAlert, LogIn, ArrowLeft } from 'lucide-react';
+import { ShieldAlert, LogIn, ArrowLeft, RefreshCw } from 'lucide-react';
 import { Button } from '../common/Button';
 
 interface ProtectedRouteProps {
@@ -9,9 +9,18 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { user, isAdmin, loading } = useAuth();
+  const { user, isAdmin, loading, signOutUser, refreshAdminStatus } = useAuth();
+  const [rechecking, setRechecking] = useState(false);
+  const navigate = useNavigate();
 
-  if (loading) {
+  // Proactively check if freshly authorized on mount
+  useEffect(() => {
+    if (user && !isAdmin) {
+      refreshAdminStatus();
+    }
+  }, [user, isAdmin, refreshAdminStatus]);
+
+  if (loading || rechecking) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
         <div className="flex flex-col items-center gap-4">
@@ -27,6 +36,17 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   }
 
   if (!isAdmin) {
+    const handleSwitchAccount = async () => {
+      await signOutUser();
+      navigate('/login');
+    };
+
+    const handleRecheck = async () => {
+      setRechecking(true);
+      await refreshAdminStatus();
+      setRechecking(false);
+    };
+
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-slate-950 text-white">
         <div className="max-w-md w-full glass-card rounded-3xl p-8 border border-rose-500/30 text-center space-y-5">
@@ -45,11 +65,22 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
                 Return Home
               </Button>
             </Link>
-            <Link to="/login">
-              <Button variant="primary" size="md" icon={<LogIn className="w-4 h-4" />}>
-                Switch Account
-              </Button>
-            </Link>
+            <Button
+              variant="outline"
+              size="md"
+              icon={<RefreshCw className="w-4 h-4" />}
+              onClick={handleRecheck}
+            >
+              Verify Access
+            </Button>
+            <Button
+              variant="primary"
+              size="md"
+              icon={<LogIn className="w-4 h-4" />}
+              onClick={handleSwitchAccount}
+            >
+              Switch Account
+            </Button>
           </div>
         </div>
       </div>
