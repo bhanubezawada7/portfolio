@@ -48,7 +48,7 @@ export async function getProjects(): Promise<Project[]> {
   try {
     const q = query(collection(db, COLLECTIONS.PROJECTS), orderBy('sortOrder', 'asc'));
     const snapshot = await getDocs(q);
-    if (snapshot.empty) return [];
+    if (snapshot.empty) return initialProjects;
     return snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Project));
   } catch (err) {
     console.warn('Failed to load projects from Firestore, falling back to cached/local seed:', err);
@@ -78,7 +78,7 @@ export async function getSkills(): Promise<Skill[]> {
   try {
     const q = query(collection(db, COLLECTIONS.SKILLS), orderBy('sortOrder', 'asc'));
     const snapshot = await getDocs(q);
-    if (snapshot.empty) return [];
+    if (snapshot.empty) return initialSkills;
     return snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Skill));
   } catch (err) {
     console.warn('Failed to load skills from Firestore:', err);
@@ -100,7 +100,7 @@ export async function getEducation(): Promise<Education[]> {
   try {
     const q = query(collection(db, COLLECTIONS.EDUCATION), orderBy('sortOrder', 'asc'));
     const snapshot = await getDocs(q);
-    if (snapshot.empty) return [];
+    if (snapshot.empty) return initialEducation;
     return snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Education));
   } catch (err) {
     console.warn('Failed to load education from Firestore:', err);
@@ -122,7 +122,7 @@ export async function getExperience(): Promise<Experience[]> {
   try {
     const q = query(collection(db, COLLECTIONS.EXPERIENCE), orderBy('sortOrder', 'asc'));
     const snapshot = await getDocs(q);
-    if (snapshot.empty) return [];
+    if (snapshot.empty) return initialExperience;
     return snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Experience));
   } catch (err) {
     console.warn('Failed to load experience from Firestore:', err);
@@ -144,7 +144,7 @@ export async function getGallery(): Promise<GalleryItem[]> {
   try {
     const q = query(collection(db, COLLECTIONS.GALLERY), orderBy('sortOrder', 'asc'));
     const snapshot = await getDocs(q);
-    if (snapshot.empty) return [];
+    if (snapshot.empty) return initialGallery;
     return snapshot.docs.map(d => ({ id: d.id, ...d.data() } as GalleryItem));
   } catch (err) {
     console.warn('Failed to load gallery from Firestore:', err);
