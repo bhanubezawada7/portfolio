@@ -9,10 +9,10 @@ export const initialProjects: Project[] = [
     description: 'Designed a wireless EV charging system concept that leverages solar power and ultracapacitor banks for rapid and efficient charging cycles. The system integrates an Arduino microcontroller to govern power regulation, supervise charge states, and present real-time charging status while simulated motion is tracked.',
     category: 'Engineering',
     technologies: ['Arduino', 'Ultracapacitors', 'Solar Energy', 'Wireless Charging', 'Sensors'],
-    thumbnail: 'https://images.unsplash.com/photo-1558441719-8b449c64f004?auto=format&fit=crop&w=800&q=80',
+    thumbnail: '/assets/projects/ev_charging_prototype.jpg',
     gallery: [
-      'https://images.unsplash.com/photo-1558441719-8b449c64f004?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1508873696983-2df570464756?auto=format&fit=crop&w=1200&q=80'
+      '/assets/projects/ev_charging_prototype.jpg',
+      'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=1200&q=80'
     ],
     liveDemoUrl: null,
     sourceCodeUrl: null,
@@ -30,8 +30,9 @@ export const initialProjects: Project[] = [
     description: 'Engineered an embedded distance indicator featuring an ultrasonic HC-SR04 sensor paired with an Arduino microcontroller. Employs acoustic echo timing calculations to map obstacle proximity onto a multi-tier LED graduated bar display for intuitive, instant visual warnings.',
     category: 'Engineering',
     technologies: ['Arduino', 'Ultrasonic Sensor (HC-SR04)', 'LED Array', 'Embedded C'],
-    thumbnail: 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?auto=format&fit=crop&w=800&q=80',
+    thumbnail: '/assets/projects/arduino_distance.jpg',
     gallery: [
+      '/assets/projects/arduino_distance.jpg',
       'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?auto=format&fit=crop&w=1200&q=80'
     ],
     liveDemoUrl: null,
@@ -50,9 +51,10 @@ export const initialProjects: Project[] = [
     description: 'Conceptualized and designed an automated solar tracking mechanism utilizing light-sensitive sensors and directional servos. By tracking the diurnal path of the sun to maintain perpendicular incidence, the system maximizes total daily kilowatt-hour yield compared to stationary photovoltaic installations.',
     category: 'Engineering',
     technologies: ['Photovoltaic (PV)', 'LDR Sensors', 'Servo Actuators', 'Renewable Energy'],
-    thumbnail: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=800&q=80',
+    thumbnail: '/assets/projects/solar_tracker.jpg',
     gallery: [
-      'https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=1200&q=80'
+      '/assets/projects/solar_tracker.jpg',
+      'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=1200&q=80'
     ],
     liveDemoUrl: null,
     sourceCodeUrl: null,

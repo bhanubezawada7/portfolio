@@ -13,22 +13,43 @@ interface ProjectModalProps {
 export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onClose }) => {
   if (!project) return null;
 
+  const projectImage = (() => {
+    if (project.thumbnail && !project.thumbnail.includes('photo-1558441719') && !project.thumbnail.includes('photo-1509391365360')) {
+      return project.thumbnail;
+    }
+    if (project.slug.includes('ev') || project.title.toLowerCase().includes('ev') || project.title.toLowerCase().includes('ultracapacitor')) {
+      return '/assets/projects/ev_charging_prototype.jpg';
+    }
+    if (project.slug.includes('solar') || project.title.toLowerCase().includes('solar')) {
+      return '/assets/projects/solar_tracker.jpg';
+    }
+    return '/assets/projects/arduino_distance.jpg';
+  })();
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={project.title} maxWidth="2xl">
       <div className="space-y-6">
         {/* Thumbnail if available */}
-        {project.thumbnail && (
-          <div className="rounded-xl overflow-hidden border border-slate-800 relative aspect-video bg-slate-950">
-            <img
-              src={project.thumbnail}
-              alt={project.title}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute top-3 right-3">
-              <Badge variant="accent">{project.category}</Badge>
-            </div>
+        <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 relative aspect-video bg-slate-950">
+          <img
+            src={projectImage}
+            alt={project.title}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              const target = e.currentTarget;
+              if (project.slug.includes('ev') || project.title.toLowerCase().includes('ev') || project.title.toLowerCase().includes('ultracapacitor')) {
+                target.src = '/assets/projects/ev_charging_prototype.jpg';
+              } else if (project.slug.includes('solar') || project.title.toLowerCase().includes('solar')) {
+                target.src = '/assets/projects/solar_tracker.jpg';
+              } else {
+                target.src = '/assets/projects/arduino_distance.jpg';
+              }
+            }}
+          />
+          <div className="absolute top-3 right-3">
+            <Badge variant="accent">{project.category}</Badge>
           </div>
-        )}
+        </div>
 
         {/* Project Meta */}
         <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-800">

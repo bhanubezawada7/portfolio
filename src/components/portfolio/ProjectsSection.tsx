@@ -9,6 +9,19 @@ interface ProjectsSectionProps {
   projects: Project[];
 }
 
+const getProjectImage = (project: Project): string => {
+  if (project.thumbnail && !project.thumbnail.includes('photo-1558441719') && !project.thumbnail.includes('photo-1509391365360')) {
+    return project.thumbnail;
+  }
+  if (project.slug.includes('ev') || project.title.toLowerCase().includes('ev') || project.title.toLowerCase().includes('ultracapacitor')) {
+    return '/assets/projects/ev_charging_prototype.jpg';
+  }
+  if (project.slug.includes('solar') || project.title.toLowerCase().includes('solar')) {
+    return '/assets/projects/solar_tracker.jpg';
+  }
+  return '/assets/projects/arduino_distance.jpg';
+};
+
 export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -120,12 +133,22 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) =>
                 <div>
                   {/* Thumbnail */}
                   <div className="relative aspect-video overflow-hidden bg-slate-100 dark:bg-slate-950">
-                    {project.thumbnail ? (
+                    {project.thumbnail || getProjectImage(project) ? (
                       <img
-                        src={project.thumbnail}
+                        src={getProjectImage(project)}
                         alt={project.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          if (project.slug.includes('ev') || project.title.toLowerCase().includes('ev') || project.title.toLowerCase().includes('ultracapacitor')) {
+                            target.src = '/assets/projects/ev_charging_prototype.jpg';
+                          } else if (project.slug.includes('solar') || project.title.toLowerCase().includes('solar')) {
+                            target.src = '/assets/projects/solar_tracker.jpg';
+                          } else {
+                            target.src = '/assets/projects/arduino_distance.jpg';
+                          }
+                        }}
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-slate-100 dark:bg-slate-900 text-indigo-500">
