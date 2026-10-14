@@ -1,5 +1,5 @@
 import React from 'react';
-import { Target, CheckCircle2, Zap, Brain, Sparkles, BookOpen, Quote, Award } from 'lucide-react';
+import { Target, CheckCircle2, Zap, Brain, Sparkles, BookOpen, Award } from 'lucide-react';
 import type { SiteSettings } from '../../types';
 
 interface AboutSectionProps {
@@ -85,7 +85,6 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ settings }) => {
             <div className="group relative overflow-hidden rounded-3xl p-7 sm:p-9 bg-white/85 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/90 dark:border-slate-800/80 shadow-xl shadow-slate-200/50 dark:shadow-black/40 hover:border-indigo-500/40 hover:-translate-y-1.5 transition-all duration-300">
               {/* Subtle decorative background glow */}
               <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-gradient-to-br from-indigo-500/15 via-purple-500/10 to-transparent blur-2xl group-hover:scale-125 transition-transform duration-500" />
-              <Quote className="pointer-events-none absolute right-6 bottom-4 w-24 h-24 text-slate-100 dark:text-slate-800/40 -rotate-12 select-none" />
 
               <div className="relative z-10 space-y-5">
                 <div className="flex items-center gap-3">
