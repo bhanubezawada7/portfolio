@@ -1,40 +1,43 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
-  :root {
-    --bg-primary: #0b0f19;
-    --bg-secondary: #111827;
-    --bg-card: rgba(17, 24, 39, 0.7);
-    --bg-card-hover: rgba(30, 41, 59, 0.8);
-    --bg-glass: rgba(15, 23, 42, 0.65);
+  :root,
+  .dark {
+    --bg-primary: #030712;
+    --bg-secondary: #0b0f19;
+    --bg-card: rgba(15, 23, 42, 0.75);
+    --bg-card-hover: rgba(30, 41, 59, 0.9);
+    --bg-glass: rgba(15, 23, 42, 0.75);
     --border-color: rgba(255, 255, 255, 0.08);
-    --border-hover: rgba(129, 140, 248, 0.3);
+    --border-hover: rgba(99, 102, 241, 0.45);
     --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
     --accent-primary: #6366f1;
     --accent-secondary: #8b5cf6;
     --accent-glow: rgba(99, 102, 241, 0.25);
     --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
-    --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
   }
 
   .light {
     --bg-primary: #f8fafc;
     --bg-secondary: #ffffff;
-    --bg-card: rgba(255, 255, 255, 0.85);
-    --bg-card-hover: rgba(248, 250, 252, 0.95);
-    --bg-glass: rgba(255, 255, 255, 0.75);
-    --border-color: rgba(0, 0, 0, 0.08);
-    --border-hover: rgba(99, 102, 241, 0.35);
+    --bg-card: rgba(255, 255, 255, 0.95);
+    --bg-card-hover: #ffffff;
+    --bg-glass: rgba(255, 255, 255, 0.88);
+    --border-color: rgba(226, 232, 240, 0.95);
+    --border-hover: rgba(99, 102, 241, 0.5);
     --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-muted: #94a3b8;
+    --text-secondary: #334155;
+    --text-muted: #64748b;
     --accent-primary: #4f46e5;
     --accent-secondary: #7c3aed;
     --accent-glow: rgba(99, 102, 241, 0.15);
     --accent-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%);
-    --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+    --card-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
   }
 }
 
@@ -52,7 +55,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Glassmorphism utility */
+/* Glassmorphism utilities */
 .glass-panel {
   background: var(--bg-glass);
   backdrop-filter: blur(16px);
@@ -62,17 +65,58 @@ body {
 
 .glass-card {
   background: var(--bg-card);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  color: var(--text-primary);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-color);
   box-shadow: var(--card-shadow);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-card:hover {
   background: var(--bg-card-hover);
   border-color: var(--border-hover);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 20px 35px -10px rgba(99, 102, 241, 0.18);
+}
+
+.light .glass-card:hover {
+  box-shadow: 0 20px 35px -10px rgba(79, 70, 229, 0.12);
+}
+
+/* Automatic contrast protection in Light Mode */
+.light .text-slate-100 {
+  color: #0f172a !important;
+}
+.light .text-slate-200 {
+  color: #1e293b !important;
+}
+.light .text-slate-300 {
+  color: #334155 !important;
+}
+.light .text-slate-400 {
+  color: #64748b !important;
+}
+.light .bg-slate-900,
+.light .bg-slate-900\/80,
+.light .bg-slate-900\/90,
+.light .bg-slate-950,
+.light .bg-slate-950\/40 {
+  background-color: #ffffff !important;
+}
+.light .bg-slate-800,
+.light .bg-slate-800\/80,
+.light .bg-slate-800\/70,
+.light .bg-slate-800\/50 {
+  background-color: #f1f5f9 !important;
+}
+.light .border-slate-800,
+.light .border-slate-800\/80,
+.light .border-slate-800\/60,
+.light .border-slate-700,
+.light .border-slate-700\/50,
+.light .border-slate-700\/60 {
+  border-color: rgba(226, 232, 240, 0.9) !important;
 }
 
 /* Custom Gradient Text */

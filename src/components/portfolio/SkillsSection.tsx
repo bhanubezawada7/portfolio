@@ -20,11 +20,11 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
   ];
 
   const categoryIcons: Record<string, React.ReactNode> = {
-    Programming: <Code2 className="w-5 h-5 text-indigo-400" />,
-    'Web Development': <Globe className="w-5 h-5 text-sky-400" />,
-    'Digital Marketing': <TrendingUp className="w-5 h-5 text-emerald-400" />,
-    'Creative & Productivity': <Sparkles className="w-5 h-5 text-pink-400" />,
-    'Technical Tools': <Cpu className="w-5 h-5 text-amber-400" />,
+    Programming: <Code2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />,
+    'Web Development': <Globe className="w-5 h-5 text-sky-600 dark:text-sky-400" />,
+    'Digital Marketing': <TrendingUp className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />,
+    'Creative & Productivity': <Sparkles className="w-5 h-5 text-pink-600 dark:text-pink-400" />,
+    'Technical Tools': <Cpu className="w-5 h-5 text-amber-600 dark:text-amber-400" />,
   };
 
   const filteredSkills =
@@ -42,17 +42,26 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
     .filter(g => g.skills.length > 0);
 
   return (
-    <section id="skills" className="py-20 md:py-28 relative bg-slate-950/40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="skills" className="py-20 md:py-28 relative overflow-hidden transition-colors duration-300">
+      {/* Decorative gradient blur */}
+      <div className="absolute top-1/3 right-0 w-96 h-96 bg-indigo-500/5 dark:bg-indigo-500/10 blur-[130px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-10 left-10 w-96 h-96 bg-emerald-500/5 dark:bg-emerald-500/10 blur-[130px] rounded-full pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-widest text-indigo-400">
-            Expertise & Toolkit
-          </p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-100 tracking-tight">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200/80 dark:border-indigo-800/60 shadow-sm">
+            <Cpu className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+            <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 dark:text-indigo-400">
+              Expertise & Toolkit
+            </span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
             Technical & Marketing Capabilities
           </h2>
-          <p className="text-base text-slate-400 leading-relaxed">
+
+          <p className="text-base sm:text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl mx-auto">
             A versatile blend of engineering analytical competencies, web technologies, and strategic digital marketing tools.
           </p>
         </div>
@@ -63,10 +72,10 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${
                 activeCategory === cat
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 border border-indigo-500'
-                  : 'bg-slate-900/80 text-slate-400 hover:text-slate-200 border border-slate-800 hover:border-slate-700'
+                  ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 border border-indigo-500 scale-105'
+                  : 'bg-white/80 dark:bg-slate-900/80 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200/90 dark:border-slate-800/80 hover:border-indigo-500/40 shadow-sm'
               }`}
             >
               {cat}
@@ -76,47 +85,63 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
 
         {/* If All is selected, display visually grouped rich cards */}
         {activeCategory === 'All' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
             {groupedSkills.map((group) => (
               <div
                 key={group.category}
-                className="glass-card rounded-2xl p-6 border border-slate-800/80 flex flex-col justify-between"
+                className="group relative overflow-hidden rounded-3xl p-6 sm:p-7 bg-white/85 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/90 dark:border-slate-800/80 shadow-lg shadow-slate-200/40 dark:shadow-black/40 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-indigo-500/10 hover:border-indigo-500/40 transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
-                  <div className="flex items-center gap-3 mb-4 pb-3 border-b border-slate-800/60">
-                    <div className="p-2 rounded-xl bg-slate-800/80 border border-slate-700/50">
-                      {categoryIcons[group.category] || <Layers className="w-5 h-5 text-indigo-400" />}
+                  <div className="flex items-center gap-3 mb-5 pb-4 border-b border-slate-100 dark:border-slate-800/70">
+                    <div className="p-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/60 shadow-sm group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                      {categoryIcons[group.category] || <Layers className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
                     </div>
-                    <h3 className="text-base font-bold text-slate-100">{group.category}</h3>
+                    <div>
+                      <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+                        {group.category}
+                      </h3>
+                      <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                        {group.skills.length} competencies
+                      </p>
+                    </div>
                   </div>
 
                   <div className="flex flex-wrap gap-2 pt-1">
                     {group.skills.map((skill) => (
                       <span
                         key={skill.id}
-                        className="px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-800/70 text-slate-300 border border-slate-700/60 hover:border-indigo-500/50 hover:text-white transition-all"
+                        className="px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/60 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 hover:border-indigo-500/50 hover:text-indigo-600 dark:hover:text-indigo-300 hover:scale-105 transition-all duration-200 shadow-sm"
                       >
                         {skill.name}
                       </span>
                     ))}
                   </div>
                 </div>
+
+                <div className="mt-5 pt-3 border-t border-slate-100 dark:border-slate-800/50 flex justify-between items-center text-[11px] font-semibold text-slate-400 dark:text-slate-500">
+                  <span>Verified Skillset</span>
+                  <span className="text-indigo-600 dark:text-indigo-400 font-mono">Bhausri Bezawada</span>
+                </div>
               </div>
             ))}
           </div>
         ) : (
           /* Filtered grid */
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-5 max-w-4xl mx-auto">
             {filteredSkills.map((skill) => (
               <div
                 key={skill.id}
-                className="glass-card rounded-xl p-4 text-center border border-slate-800 hover:border-indigo-500/50 transition-all flex flex-col items-center justify-center gap-2"
+                className="group relative overflow-hidden rounded-2xl p-5 text-center bg-white/85 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/90 dark:border-slate-800/80 shadow-md shadow-slate-200/30 dark:shadow-black/30 hover:border-indigo-500/50 hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 flex flex-col items-center justify-center gap-2.5"
               >
-                <div className="p-2 rounded-lg bg-indigo-500/10 text-indigo-400">
-                  {categoryIcons[skill.category] || <Layers className="w-4 h-4" />}
+                <div className="p-3 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200/80 dark:border-indigo-800/60 group-hover:scale-110 transition-transform">
+                  {categoryIcons[skill.category] || <Layers className="w-5 h-5" />}
                 </div>
-                <span className="text-sm font-semibold text-slate-200">{skill.name}</span>
-                <span className="text-[11px] text-slate-400">{skill.category}</span>
+                <span className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                  {skill.name}
+                </span>
+                <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                  {skill.category}
+                </span>
               </div>
             ))}
           </div>

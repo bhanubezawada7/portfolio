@@ -20,23 +20,23 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ settings, resumeUrl = 
           {/* Left Column: Text & CTAs */}
           <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
             {/* Dynamic Status Pill */}
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-800/80 border border-slate-700/60 shadow-sm backdrop-blur-md">
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/60 shadow-sm backdrop-blur-md">
               <span className="relative flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
               </span>
-              <span className="text-xs font-medium text-slate-300">
+              <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                 {settings.availabilityStatus || 'Available for Opportunities'}
               </span>
             </div>
 
             {/* Main Heading */}
             <div className="space-y-3">
-              <p className="text-sm sm:text-base font-semibold tracking-wide uppercase text-indigo-400 flex items-center justify-center lg:justify-start gap-1.5">
+              <p className="text-sm sm:text-base font-semibold tracking-wide uppercase text-indigo-600 dark:text-indigo-400 flex items-center justify-center lg:justify-start gap-1.5">
                 <Sparkles className="w-4 h-4" />
                 <span>Electrical & Electronics Engineering Graduate</span>
               </p>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-100 leading-[1.12]">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.12]">
                 Hi, I'm{' '}
                 <span className="gradient-text">
                   {settings.ownerName || 'Bhausri Bezawada'}
@@ -45,10 +45,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ settings, resumeUrl = 
             </div>
 
             {/* Professional Headline & Bio */}
-            <p className="text-lg sm:text-xl font-medium text-slate-300 leading-snug max-w-2xl mx-auto lg:mx-0">
+            <p className="text-lg sm:text-xl font-medium text-slate-800 dark:text-slate-200 leading-snug max-w-2xl mx-auto lg:mx-0">
               {settings.heroHeadline}
             </p>
-            <p className="text-sm sm:text-base text-slate-400 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl mx-auto lg:mx-0">
               {settings.heroBio}
             </p>
 
@@ -70,25 +70,25 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ settings, resumeUrl = 
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Button size="lg" variant="outline" icon={<FileDown className="w-4 h-4 text-indigo-400" />}>
+                <Button size="lg" variant="outline" icon={<FileDown className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />}>
                   Download Resume
                 </Button>
               </a>
             </div>
 
             {/* Key stats / highlights */}
-            <div className="pt-6 grid grid-cols-3 gap-4 border-t border-slate-800/80 max-w-lg mx-auto lg:mx-0">
+            <div className="pt-6 grid grid-cols-3 gap-4 border-t border-slate-200 dark:border-slate-800/80 max-w-lg mx-auto lg:mx-0">
               <div className="text-center lg:text-left">
-                <p className="text-2xl font-bold text-white tracking-tight">7.8</p>
-                <p className="text-xs text-slate-400">B.Tech CGPA</p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">7.8</p>
+                <p className="text-xs font-medium text-slate-500 dark:text-slate-400">B.Tech CGPA</p>
               </div>
               <div className="text-center lg:text-left">
-                <p className="text-2xl font-bold text-indigo-400 tracking-tight">3+</p>
-                <p className="text-xs text-slate-400">Core Projects</p>
+                <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 tracking-tight">3+</p>
+                <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Core Projects</p>
               </div>
               <div className="text-center lg:text-left">
-                <p className="text-2xl font-bold text-purple-400 tracking-tight">2</p>
-                <p className="text-xs text-slate-400">Industry Internships</p>
+                <p className="text-2xl font-bold text-purple-600 dark:text-purple-400 tracking-tight">2</p>
+                <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Industry Internships</p>
               </div>
             </div>
           </div>

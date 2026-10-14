@@ -14,7 +14,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [theme, setThemeState] = useState<Theme>(() => {
     const saved = localStorage.getItem('portfolio-theme') as Theme | null;
     if (saved === 'light' || saved === 'dark') return saved;
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    return 'dark';
   });
 
   useEffect(() => {
@@ -22,9 +22,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (theme === 'light') {
       root.classList.add('light');
       root.classList.remove('dark');
+      root.style.colorScheme = 'light';
     } else {
       root.classList.add('dark');
       root.classList.remove('light');
+      root.style.colorScheme = 'dark';
     }
     localStorage.setItem('portfolio-theme', theme);
   }, [theme]);

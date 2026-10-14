@@ -43,17 +43,22 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ gallery }) => {
   };
 
   return (
-    <section id="gallery" className="py-20 md:py-28 relative bg-slate-950/40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="gallery" className="py-20 md:py-28 relative overflow-hidden transition-colors duration-300">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-widest text-indigo-400">
-            Visual Media & Moments
-          </p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-100 tracking-tight">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200/80 dark:border-indigo-800/60 shadow-sm">
+            <ImageIcon className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+            <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 dark:text-indigo-400">
+              Visual Media & Moments
+            </span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
             Media Gallery & Work Highlights
           </h2>
-          <p className="text-base text-slate-400 leading-relaxed">
+
+          <p className="text-base sm:text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl mx-auto">
             Snapshots of engineering laboratory work, digital marketing campaigns, and achievements.
           </p>
         </div>
@@ -65,10 +70,10 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ gallery }) => {
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer ${
                   selectedCategory === cat
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                    : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 scale-105 border border-indigo-500'
+                    : 'bg-white/80 dark:bg-slate-900 text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200/90 dark:border-slate-800 shadow-sm'
                 }`}
               >
                 {cat}
@@ -78,15 +83,15 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ gallery }) => {
         )}
 
         {/* Responsive Grid with natural aspect ratios */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-7">
           {filteredItems.map((item, idx) => (
             <div
               key={item.id}
               onClick={() => openLightbox(idx)}
-              className="glass-card rounded-2xl overflow-hidden border border-slate-800/80 group cursor-pointer relative hover:border-indigo-500/50 transition-all duration-300"
+              className="group relative overflow-hidden rounded-3xl bg-white/85 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/90 dark:border-slate-800/80 shadow-lg shadow-slate-200/40 dark:shadow-black/40 cursor-pointer hover:border-indigo-500/50 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-300"
             >
               {/* Media Container */}
-              <div className="relative aspect-[4/3] bg-slate-900 overflow-hidden">
+              <div className="relative aspect-[4/3] bg-slate-100 dark:bg-slate-900 overflow-hidden">
                 {item.mediaType === 'video' ? (
                   <video
                     src={item.url}
@@ -121,7 +126,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ gallery }) => {
               {/* Caption & Info */}
               <div className="p-4 space-y-1">
                 <div className="flex items-center justify-between gap-2">
-                  <h4 className="text-sm font-bold text-slate-200 group-hover:text-indigo-300 transition-colors truncate">
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">
                     {item.title}
                   </h4>
                   {item.category && (
@@ -131,7 +136,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ gallery }) => {
                   )}
                 </div>
                 {item.caption && (
-                  <p className="text-xs text-slate-400 line-clamp-1">{item.caption}</p>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-1">{item.caption}</p>
                 )}
               </div>
             </div>

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, ExternalLink, ArrowUpRight, Cpu, Code2 } from 'lucide-react';
+import { Search, ExternalLink, ArrowUpRight, Cpu, Code2, FolderKanban } from 'lucide-react';
 import { Badge } from '../common/Badge';
 import { EmptyState } from '../common/EmptyState';
 import { ProjectModal } from './ProjectModal';
@@ -42,17 +42,22 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) =>
   }, [publishedProjects, selectedCategory, searchQuery]);
 
   return (
-    <section id="projects" className="py-20 md:py-28 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="projects" className="py-20 md:py-28 relative overflow-hidden transition-colors duration-300">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-widest text-indigo-400">
-            Portfolio Showcase
-          </p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-100 tracking-tight">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200/80 dark:border-indigo-800/60 shadow-sm">
+            <FolderKanban className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+            <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 dark:text-indigo-400">
+              Portfolio Showcase
+            </span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
             Engineering & Technical Projects
           </h2>
-          <p className="text-base text-slate-400 leading-relaxed">
+
+          <p className="text-base sm:text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl mx-auto">
             Hardware prototypes, microcontroller designs, and sustainable technology implementations.
           </p>
         </div>
@@ -65,10 +70,10 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) =>
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer ${
                   selectedCategory === cat
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                    : 'bg-slate-900/90 text-slate-400 hover:text-white border border-slate-800'
+                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 scale-105 border border-indigo-500'
+                    : 'bg-white/80 dark:bg-slate-900/90 text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200/90 dark:border-slate-800 shadow-sm'
                 }`}
               >
                 {cat}
@@ -84,7 +89,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) =>
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search projects or tools..."
-              className="w-full bg-slate-900/80 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs sm:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all"
+              className="w-full bg-white/90 dark:bg-slate-900/80 border border-slate-200/90 dark:border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs sm:text-sm text-slate-900 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all shadow-sm"
             />
           </div>
         </div>
@@ -105,16 +110,16 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) =>
             }}
           />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
             {filteredProjects.map((project) => (
               <div
                 key={project.id}
                 onClick={() => setActiveProject(project)}
-                className="glass-card rounded-2xl overflow-hidden border border-slate-800/80 group flex flex-col justify-between cursor-pointer hover:border-indigo-500/40 hover:-translate-y-1 transition-all duration-300"
+                className="group relative overflow-hidden rounded-3xl bg-white/85 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/90 dark:border-slate-800/80 shadow-lg shadow-slate-200/40 dark:shadow-black/40 flex flex-col justify-between cursor-pointer hover:border-indigo-500/50 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-300"
               >
                 <div>
                   {/* Thumbnail */}
-                  <div className="relative aspect-video overflow-hidden bg-slate-950">
+                  <div className="relative aspect-video overflow-hidden bg-slate-100 dark:bg-slate-950">
                     {project.thumbnail ? (
                       <img
                         src={project.thumbnail}
@@ -123,7 +128,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) =>
                         loading="lazy"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-slate-900 text-indigo-400">
+                      <div className="w-full h-full flex items-center justify-center bg-slate-100 dark:bg-slate-900 text-indigo-500">
                         <Cpu className="w-12 h-12 opacity-60" />
                       </div>
                     )}
@@ -142,13 +147,13 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) =>
                   {/* Body */}
                   <div className="p-6 space-y-3">
                     <div className="flex items-start justify-between gap-2">
-                      <h3 className="text-lg font-bold text-slate-100 group-hover:text-indigo-300 transition-colors line-clamp-2">
+                      <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2">
                         {project.title}
                       </h3>
-                      <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-indigo-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 mt-1" />
+                      <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-indigo-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 mt-1" />
                     </div>
 
-                    <p className="text-xs sm:text-sm text-slate-400 line-clamp-3 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 line-clamp-3 leading-relaxed font-normal">
                       {project.summary}
                     </p>
                   </div>
@@ -160,20 +165,20 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) =>
                     {project.technologies.slice(0, 3).map((tech, i) => (
                       <span
                         key={i}
-                        className="text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700/60"
+                        className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60"
                       >
                         {tech}
                       </span>
                     ))}
                     {project.technologies.length > 3 && (
-                      <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800/60 text-slate-400">
+                      <span className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400">
                         +{project.technologies.length - 3}
                       </span>
                     )}
                   </div>
 
-                  <div className="flex items-center justify-between pt-3 border-t border-slate-800/60 text-xs">
-                    <span className="text-indigo-400 font-semibold group-hover:underline">
+                  <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800/60 text-xs">
+                    <span className="text-indigo-600 dark:text-indigo-400 font-bold group-hover:underline">
                       View Details & Specs →
                     </span>
 
@@ -183,7 +188,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) =>
                           href={project.sourceCodeUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                          className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                           title="Source Code"
                         >
                           <Code2 className="w-4 h-4" />
@@ -194,7 +199,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) =>
                           href={project.liveDemoUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                          className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                           title="Live Demo"
                         >
                           <ExternalLink className="w-4 h-4" />

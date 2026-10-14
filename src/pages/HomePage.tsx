@@ -73,7 +73,7 @@ export const HomePage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-950">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
         <Navbar />
         <div className="pt-32">
           <SectionSkeleton />
@@ -85,7 +85,7 @@ export const HomePage: React.FC = () => {
   const { sectionVisibility } = settings;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col selection:bg-indigo-500 selection:text-white transition-colors duration-300">
       {/* Smart Sticky Header */}
       <Navbar resumeUrl={settings.resumeUrl || resume.fileUrl} />
 
