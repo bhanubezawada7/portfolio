@@ -83,11 +83,15 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Theme Switcher */}
             <button
               onClick={toggleTheme}
-              className="p-2.5 rounded-xl text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700/50 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer shadow-sm"
-              aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-              title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
+              className="p-2.5 rounded-xl text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/60 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer shadow-md hover:scale-105 active:scale-95"
+              aria-label={`Switch to ${theme === 'light' ? 'Dark Mode (Obsidian)' : 'Blue Mode (Royal Navy)'}`}
+              title={`Switch to ${theme === 'light' ? 'Dark Mode (Obsidian Black)' : 'Blue Mode (Midnight Navy)'}`}
             >
-              {theme === 'light' ? <Moon className="w-4 h-4 text-indigo-600" /> : <Sun className="w-4 h-4 text-amber-400" />}
+              {theme === 'light' ? (
+                <Moon className="w-4 h-4 text-purple-400" />
+              ) : (
+                <Sun className="w-4 h-4 text-amber-400" />
+              )}
             </button>
 
             {/* Resume Download CTA */}
@@ -137,10 +141,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex sm:hidden items-center gap-2">
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800"
-              aria-label="Toggle theme"
+              className="p-2 rounded-xl text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/60 transition-all cursor-pointer"
+              aria-label={`Switch to ${theme === 'light' ? 'Dark Mode (Obsidian)' : 'Blue Mode (Royal Navy)'}`}
+              title={`Switch to ${theme === 'light' ? 'Dark Mode (Obsidian)' : 'Blue Mode (Royal Navy)'}`}
             >
-              {theme === 'light' ? <Moon className="w-4 h-4 text-indigo-600" /> : <Sun className="w-4 h-4 text-amber-400" />}
+              {theme === 'light' ? <Moon className="w-4 h-4 text-purple-400" /> : <Sun className="w-4 h-4 text-amber-400" />}
             </button>
             <button
               onClick={() => setIsOpen(!isOpen)}
