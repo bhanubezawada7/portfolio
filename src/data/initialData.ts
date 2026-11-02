@@ -119,11 +119,11 @@ export const initialEducation: Education[] = [
   {
     id: 'edu-3',
     degree: 'Secondary School Certificate (SSC / 10th Standard)',
-    institution: 'Board of Secondary Education',
-    location: 'Andhra Pradesh',
+    institution: 'SVR English Medium High School, Gudlavalleru',
+    location: 'Gudlavalleru, Andhra Pradesh',
     period: '2019',
     grade: 'CGPA: 9.3',
-    description: 'Completed secondary education with top honors and academic excellence.',
+    description: 'Completed secondary education with top honors (9.3 CGPA) at SVR English Medium High School, building disciplined academic rigor and strong fundamentals in science and mathematics.',
     sortOrder: 3,
     published: true
   }

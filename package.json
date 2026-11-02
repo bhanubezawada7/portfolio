@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "test": "node --experimental-strip-types --test test/portfolio.test.mjs",
+    "test": "node --experimental-strip-types --test test/portfolio.test.mjs test/heroSection.test.mjs test/skillsTapSection.test.mjs test/carousel3DSection.test.mjs test/educationAccordion.test.mjs test/experienceSlidingSection.test.mjs test/navbarGlassmorphism.test.mjs test/bookletSubtitle.test.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

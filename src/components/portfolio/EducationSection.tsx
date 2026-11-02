@@ -1,457 +1,364 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import {
   GraduationCap,
   Calendar,
   MapPin,
   Award,
-  ChevronLeft,
-  ChevronRight,
-  ArrowRight,
+  Sparkles,
   BookOpen,
   CheckCircle2,
-  MousePointerClick,
-  Zap
+  Building2,
+  ArrowUpRight
 } from 'lucide-react';
 import type { Education } from '../../types';
-import { initialEducation } from '../../data/initialData';
 
 interface EducationSectionProps {
   education?: Education[];
 }
 
-interface EducationStageConfig {
+interface EducationCardConfig {
   id: string;
-  stepNum: string;
-  stageLabel: string;
-  degree: string;
+  cardNum: string;
+  closedTitle: string;
+  expandedTitle: string;
   institution: string;
+  branch?: string;
   location: string;
   period: string;
   grade: string;
-  status: string;
-  icon: React.ReactNode;
-  accentGradient: string;
-  badgeStyle: string;
-  borderHover: string;
-  highlights: string[];
+  categoryTag: string;
+  image: string;
+  fallbackImage: string;
   description: string;
+  highlights: string[];
+  accentColor: string;
+  badgeBg: string;
+  tagColor: string;
+  glowBorder: string;
 }
 
-export const EducationSection: React.FC<EducationSectionProps> = ({ education }) => {
-  // Always ensure we have the 3 verified education records even if Firestore is unseeded
-  const items = education && education.length > 0
-    ? education.filter((e) => e.published).sort((a, b) => a.sortOrder - b.sortOrder)
-    : initialEducation;
+export const EducationSection: React.FC<EducationSectionProps> = ({ education: _education }) => {
+  // Default to Card 3 (B.Tech - EEE) expanded, or null if all are collapsed
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(2);
 
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [touchStartX, setTouchStartX] = useState<number | null>(null);
-
-  // Rich metadata configuration for each education tier
-  const educationStages: EducationStageConfig[] = [
+  const cards: EducationCardConfig[] = [
     {
-      id: 'btech',
-      stepNum: '01',
-      stageLabel: 'Graduation Degree',
-      degree: 'Bachelor of Technology (B.Tech) — Electrical and Electronics Engineering (EEE)',
-      institution: 'Seshadri Rao Gudlavalleru Engineering College (SRGEC)',
+      id: 'ssc',
+      cardNum: '01',
+      closedTitle: '10th Class',
+      expandedTitle: '10th Class (SSC)',
+      institution: 'SVR English Medium High School, Gudlavalleru',
+      branch: 'Secondary Schooling',
       location: 'Gudlavalleru, Andhra Pradesh',
-      period: '2021 – 2025',
-      grade: 'CGPA: 7.8',
-      status: 'Graduated Engineering Scholar',
-      icon: <GraduationCap className="w-7 h-7 text-indigo-600 dark:text-indigo-400" />,
-      accentGradient: 'from-indigo-500/20 via-purple-500/10 to-transparent',
-      badgeStyle: 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border-indigo-500/30',
-      borderHover: 'hover:border-indigo-500/60',
+      period: '2019',
+      grade: 'CGPA: 9.3',
+      categoryTag: '01 • SECONDARY SCHOOL',
+      image: '/assets/education/Colorful School Courtyard Playground.png',
+      fallbackImage: '/Colorful School Courtyard Playground.png',
       description:
-        'Comprehensive study of circuit theory, electrical machines, power systems, control engineering, renewable energy, and embedded microcontrollers.',
+        'Completed secondary education with top honors (9.3 CGPA) at SVR English Medium High School, building disciplined academic rigor and strong fundamentals in science and mathematics.',
       highlights: [
-        'Circuits & Systems & Power Electronics',
-        'Ultracapacitor-Based EV Wireless Charging Prototype',
-        'Automated Solar Tracker using Servos & Sensors',
-        'Microcontroller Programming (8051 & Arduino)'
-      ]
+        'SVR English Medium High School, Gudlavalleru',
+        'Top Academic Distinction with 9.3 CGPA',
+        'Excellence in Mathematics & Fundamental Sciences',
+        'Active Participation in Science Exhibitions'
+      ],
+      accentColor: 'from-emerald-500/20 via-teal-500/10 to-transparent',
+      badgeBg: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+      tagColor: 'text-emerald-400 border-emerald-500/30 bg-emerald-950/60',
+      glowBorder: 'border-emerald-500/70 shadow-emerald-500/20'
     },
     {
       id: 'inter',
-      stepNum: '02',
-      stageLabel: 'Higher Secondary',
-      degree: 'Intermediate — MPC (Mathematics, Physics, Chemistry)',
+      cardNum: '02',
+      closedTitle: 'Intermediate',
+      expandedTitle: 'Intermediate (MPC)',
       institution: 'Narayana Junior College, Gudivada',
+      branch: 'MPC (Mathematics, Physics, Chemistry)',
       location: 'Gudivada, Andhra Pradesh',
       period: '2019 – 2021',
       grade: 'CGPA: 8.0',
-      status: 'Higher Secondary Distinction',
-      icon: <BookOpen className="w-7 h-7 text-purple-600 dark:text-purple-400" />,
-      accentGradient: 'from-purple-500/20 via-pink-500/10 to-transparent',
-      badgeStyle: 'bg-purple-500/15 text-purple-700 dark:text-purple-300 border-purple-500/30',
-      borderHover: 'hover:border-purple-500/60',
+      categoryTag: '02 • HIGHER SECONDARY',
+      image: '/assets/education/Screenshot 2026-10-30 125309.jpg',
+      fallbackImage: '/Screenshot 2026-10-30 125309.jpg',
       description:
-        'Rigorous pre-engineering foundation covering higher mathematics, physical mechanics, chemical sciences, and analytical problem-solving.',
+        'Rigorous pre-engineering coursework covering differential calculus, physical mechanics, electromagnetism, and chemical sciences, establishing analytical and computational foundations.',
       highlights: [
-        'Differential Calculus & Coordinate Geometry',
-        'Electromagnetism, Optics & Modern Physics',
-        'Chemical Kinetics & Analytical Chemistry',
-        'Competitive Exam Preparation & Problem Solving'
-      ]
+        'Narayana Junior College, Gudivada',
+        'MPC (Mathematics, Physics, Chemistry)',
+        'CGPA: 8.0 Higher Secondary Distinction',
+        'Differential Calculus, Optics & Physical Sciences'
+      ],
+      accentColor: 'from-purple-500/20 via-indigo-500/10 to-transparent',
+      badgeBg: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
+      tagColor: 'text-purple-400 border-purple-500/30 bg-purple-950/60',
+      glowBorder: 'border-purple-500/70 shadow-purple-500/20'
     },
     {
-      id: 'ssc',
-      stepNum: '03',
-      stageLabel: 'Secondary School',
-      degree: 'Secondary School Certificate (SSC)',
-      institution: 'Board of Secondary Education',
-      location: 'Andhra Pradesh, India',
-      period: '2019',
-      grade: 'CGPA: 9.3',
-      status: 'Top Academic Distinction',
-      icon: <Award className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />,
-      accentGradient: 'from-emerald-500/20 via-teal-500/10 to-transparent',
-      badgeStyle: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30',
-      borderHover: 'hover:border-emerald-500/60',
+      id: 'btech',
+      cardNum: '03',
+      closedTitle: 'B.Tech - EEE',
+      expandedTitle: 'B.Tech — Electrical and Electronics Engineering',
+      institution: 'Seshadri Rao Gudlavalleru Engineering College (SRGEC)',
+      branch: 'Electrical and Electronics Engineering',
+      location: 'Gudlavalleru, Andhra Pradesh',
+      period: '2021–2025',
+      grade: 'CGPA: 7.8',
+      categoryTag: '03 • UNDERGRADUATE DEGREE',
+      image: '/assets/education/Screenshot 2026-10-30 125347.jpg',
+      fallbackImage: '/Screenshot 2026-10-30 125347.jpg',
       description:
-        'Completed secondary education with top honors (9.3 CGPA), establishing academic discipline and core scientific fundamentals.',
+        'Comprehensive 4-year engineering program covering circuits & systems, power electronics, control engineering, microcontrollers, embedded hardware, and renewable energy technologies.',
       highlights: [
-        'Top Academic Honors with 9.3 CGPA Distinction',
-        'Excellence in Mathematics & Fundamental Sciences',
-        'Strong Foundation in Communication & Problem Solving',
-        'Active Participation in Science Exhibitions'
-      ]
+        'Seshadri Rao Gudlavalleru Engineering College (SRGEC)',
+        'Electrical and Electronics Engineering (EEE)',
+        '2021–2025 Engineering Graduation • CGPA: 7.8',
+        'EV Wireless Charging & Solar Tracking Prototypes'
+      ],
+      accentColor: 'from-blue-500/20 via-cyan-500/10 to-transparent',
+      badgeBg: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40',
+      tagColor: 'text-cyan-400 border-cyan-500/30 bg-cyan-950/60',
+      glowBorder: 'border-cyan-500/70 shadow-cyan-500/20'
     }
   ];
 
-  // Merge any dynamic data from props if available
-  const stages = educationStages.map((stage, idx) => {
-    const matchingItem = items[idx];
-    if (!matchingItem) return stage;
-    return {
-      ...stage,
-      degree: matchingItem.degree || stage.degree,
-      institution: matchingItem.institution || stage.institution,
-      location: matchingItem.location || stage.location,
-      period: matchingItem.period || stage.period,
-      grade: matchingItem.grade || stage.grade,
-      description: matchingItem.description || stage.description
-    };
-  });
-
-  const totalCards = stages.length;
-
-  const handleNext = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % totalCards);
-  }, [totalCards]);
-
-  const handlePrev = useCallback(() => {
-    setCurrentIndex((prev) => (prev - 1 + totalCards) % totalCards);
-  }, [totalCards]);
-
   const handleCardClick = (idx: number) => {
-    if (idx === currentIndex) {
-      // Clicking the active card slides smoothly to the next card
-      handleNext();
-    } else {
-      setCurrentIndex(idx);
-    }
-  };
-
-  // Keyboard navigation support
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight') handleNext();
-      if (e.key === 'ArrowLeft') handlePrev();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleNext, handlePrev]);
-
-  // Touch swipe support for mobile
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStartX(e.touches[0].clientX);
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX === null) return;
-    const touchEndX = e.changedTouches[0].clientX;
-    const diff = touchStartX - touchEndX;
-    if (diff > 50) {
-      handleNext();
-    } else if (diff < -50) {
-      handlePrev();
-    }
-    setTouchStartX(null);
+    // If user clicks a narrow card, smoothly expand it; if already expanded, collapse to narrow
+    setExpandedIndex((prev) => (prev === idx ? null : idx));
   };
 
   return (
     <section id="education" className="py-20 md:py-28 relative overflow-hidden transition-colors duration-300">
       {/* Background ambient lighting */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[650px] h-[350px] bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-emerald-500/10 blur-[140px] rounded-full pointer-events-none" />
-      <div className="absolute top-10 right-10 w-96 h-96 bg-indigo-500/5 dark:bg-indigo-500/10 blur-[130px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-10 left-10 w-96 h-96 bg-purple-500/5 dark:bg-purple-500/10 blur-[130px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[720px] h-[380px] bg-gradient-to-r from-indigo-500/15 via-purple-500/15 to-cyan-500/15 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute top-20 right-10 w-96 h-96 bg-indigo-500/10 blur-[130px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-20 left-10 w-96 h-96 bg-cyan-500/10 blur-[130px] rounded-full pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-950/70 border border-indigo-200/90 dark:border-indigo-800/70 shadow-sm">
-            <GraduationCap className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-            <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 dark:text-indigo-400">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 backdrop-blur-sm shadow-sm">
+            <GraduationCap className="w-4 h-4 text-indigo-400" />
+            <span className="text-xs font-bold uppercase tracking-widest text-indigo-300">
               Academic Background
             </span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
-            Education & Qualifications
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+            Education &amp; Qualifications
           </h2>
 
-          <p className="text-base sm:text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl mx-auto">
-            Academic achievements and technical foundation from secondary school through engineering graduation.
+          <p className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto">
+            Interactive academic journey showcasing secondary schooling, higher secondary MPC foundations, and B.Tech in Electrical and Electronics Engineering.
           </p>
-        </div>
 
-        {/* Interactive Step Switcher & Timeline Bar */}
-        <div className="max-w-4xl mx-auto">
-          {/* Step Selector Pills */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mb-6">
-            {stages.map((stage, idx) => {
-              const isActive = idx === currentIndex;
+          {/* Quick switcher navigation pills & Hint */}
+          <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2">
+            {cards.map((card, idx) => {
+              const isSelected = expandedIndex === idx;
               return (
                 <button
-                  key={stage.id}
+                  key={card.id}
                   type="button"
-                  onClick={() => setCurrentIndex(idx)}
-                  className={`group relative p-4 rounded-2xl border text-left transition-all duration-300 cursor-pointer overflow-hidden ${
-                    isActive
-                      ? 'bg-indigo-50/90 dark:bg-indigo-950/70 border-indigo-500/60 shadow-lg shadow-indigo-500/10 scale-[1.02]'
-                      : 'bg-white/70 dark:bg-slate-900/70 border-slate-200/80 dark:border-slate-800/70 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:border-slate-300 dark:hover:border-slate-700'
+                  data-card-index={idx}
+                  data-card-id={card.id}
+                  onClick={() => setExpandedIndex(idx)}
+                  className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer ${
+                    isSelected
+                      ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30 scale-105 border border-indigo-400/50'
+                      : 'bg-slate-900/80 text-slate-400 border border-slate-700/60 hover:text-white hover:bg-slate-800 hover:border-slate-600'
                   }`}
+                  aria-pressed={isSelected}
                 >
-                  {isActive && (
-                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
-                  )}
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span
-                      className={`text-xs font-mono font-extrabold ${
-                        isActive ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-500'
-                      }`}
-                    >
-                      STAGE {stage.stepNum}
-                    </span>
-                    <span
-                      className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
-                        isActive
-                          ? 'bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300'
-                          : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
-                      }`}
-                    >
-                      {stage.period}
-                    </span>
-                  </div>
-                  <div
-                    className={`text-sm font-extrabold tracking-tight truncate ${
-                      isActive ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-300'
-                    }`}
-                  >
-                    {stage.stageLabel}
-                  </div>
-                  <div className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">
-                    {stage.grade}
-                  </div>
+                  <span className="font-mono text-[11px] opacity-80">{card.cardNum}</span>
+                  <span>{card.closedTitle}</span>
+                  {isSelected && <Sparkles className="w-3 h-3 text-cyan-300 animate-pulse" />}
                 </button>
               );
             })}
-          </div>
 
-          {/* Controls Bar with Navigation & Helper Hint */}
-          <div className="flex items-center justify-between px-2 pb-2">
-            <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/70 px-3 py-1 rounded-full border border-slate-200 dark:border-slate-700/60">
-                <MousePointerClick className="w-3.5 h-3.5 text-indigo-500" />
-                Click card or Next to slide
-              </span>
-            </div>
-
-            <div className="flex items-center gap-2.5">
-              <span className="text-xs font-mono font-bold text-slate-400 dark:text-slate-500 mr-1">
-                {currentIndex + 1} / {totalCards}
-              </span>
-
-              <button
-                type="button"
-                onClick={handlePrev}
-                aria-label="Previous qualification card"
-                className="w-10 h-10 rounded-2xl bg-white/90 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700/80 shadow-md hover:bg-indigo-50 dark:hover:bg-indigo-950/60 hover:text-indigo-600 dark:hover:text-indigo-400 hover:scale-105 active:scale-95 transition-all flex items-center justify-center cursor-pointer"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-
-              <button
-                type="button"
-                onClick={handleNext}
-                aria-label="Next qualification card"
-                className="w-10 h-10 rounded-2xl bg-white/90 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700/80 shadow-md hover:bg-indigo-50 dark:hover:bg-indigo-950/60 hover:text-indigo-600 dark:hover:text-indigo-400 hover:scale-105 active:scale-95 transition-all flex items-center justify-center cursor-pointer"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
+            <div className="inline-flex items-center gap-1.5 text-xs text-slate-400 ml-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+              <span>Click card to expand</span>
             </div>
           </div>
         </div>
 
-        {/* 3D PERSPECTIVE SLIDER CAROUSEL STAGE */}
-        <div
-          className="relative w-full max-w-4xl mx-auto h-[460px] sm:h-[430px] md:h-[410px] perspective-1400 flex items-center justify-center select-none"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
-          {stages.map((stage, idx) => {
-            // Circular relative offset: 0 = center/active, 1 = right/next, 2 = left/prev
-            const offset = (idx - currentIndex + totalCards) % totalCards;
-            const isActive = offset === 0;
-            const isNext = offset === 1;
-            const isPrev = offset === 2; // For 3 items: offset 2 is previous
-
-            let transformClass = '';
-            let zIndexClass = 'z-10';
-            let opacityClass = 'opacity-0 pointer-events-none scale-75';
-
-            if (isActive) {
-              transformClass = 'translate-x-0 scale-100 rotate-y-0';
-              zIndexClass = 'z-30';
-              opacityClass = 'opacity-100 cursor-pointer';
-            } else if (isNext) {
-              transformClass =
-                'translate-x-[45%] sm:translate-x-[55%] md:translate-x-[62%] scale-[0.88] -rotate-y-[18deg]';
-              zIndexClass = 'z-20';
-              opacityClass = 'opacity-60 hover:opacity-95 cursor-pointer';
-            } else if (isPrev) {
-              transformClass =
-                '-translate-x-[45%] sm:-translate-x-[55%] md:-translate-x-[62%] scale-[0.88] rotate-y-[18deg]';
-              zIndexClass = 'z-20';
-              opacityClass = 'opacity-60 hover:opacity-95 cursor-pointer';
-            }
+        {/* EXPANDING CARDS / ACCORDION CONTAINER */}
+        <div className="w-full max-w-6xl mx-auto flex flex-col md:flex-row gap-4 sm:gap-5 md:gap-6 min-h-[520px] md:h-[580px] select-none">
+          {cards.map((card, idx) => {
+            const isExpanded = expandedIndex === idx;
 
             return (
               <div
-                key={stage.id}
+                key={card.id}
+                role="button"
+                tabIndex={0}
+                data-card-index={idx}
+                data-card-id={card.id}
+                aria-expanded={isExpanded}
+                aria-label={`${card.closedTitle} qualification card - click to ${isExpanded ? 'collapse' : 'expand'}`}
                 onClick={() => handleCardClick(idx)}
-                className={`absolute w-full px-2 sm:px-0 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] preserve-3d ${transformClass} ${zIndexClass} ${opacityClass}`}
-                style={{ transformStyle: 'preserve-3d' }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleCardClick(idx);
+                  }
+                }}
+                className={`relative overflow-hidden rounded-3xl cursor-pointer transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] will-change-[flex-grow,flex-basis,width] group ${
+                  isExpanded
+                    ? 'flex-[3.5] md:flex-[3.5] border-2 ring-4 ring-indigo-500/15 ' + card.glowBorder
+                    : 'flex-1 md:flex-1 h-24 md:h-auto border border-white/15 hover:border-indigo-400/60 hover:shadow-xl hover:scale-[1.01]'
+                }`}
+                style={{
+                  backgroundImage: `url("${encodeURI(card.image)}")`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
+                }}
               >
+                {/* Background Image Element for crisp high-resolution rendering and fallback */}
+                <img
+                  src={card.image}
+                  alt={card.closedTitle}
+                  className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none transition-transform duration-700 group-hover:scale-105"
+                  onError={(e) => {
+                    // Fallback to root path if needed
+                    const target = e.currentTarget;
+                    if (target.src !== card.fallbackImage) {
+                      target.src = card.fallbackImage;
+                    }
+                  }}
+                />
+
+                {/* Dark Contrast Overlay: ensures white text and badges are razor-sharp */}
                 <div
-                  className={`relative overflow-hidden rounded-3xl p-6 sm:p-9 lg:p-10 bg-white/95 dark:bg-slate-900/90 backdrop-blur-2xl border transition-all duration-500 ${
-                    isActive
-                      ? 'border-indigo-500/60 dark:border-indigo-500/50 elevation-3d ring-1 ring-indigo-500/20'
-                      : 'border-slate-200/90 dark:border-slate-800/80 shadow-xl'
-                  } ${stage.borderHover}`}
-                >
-                  {/* Ambient corner light sphere */}
+                  className={`absolute inset-0 transition-all duration-700 pointer-events-none ${
+                    isExpanded
+                      ? 'bg-gradient-to-t from-slate-950/95 via-slate-950/80 to-slate-950/45 backdrop-blur-[1.5px]'
+                      : 'bg-gradient-to-t from-black/85 via-black/45 to-black/25 group-hover:from-black/90 group-hover:via-black/50'
+                  }`}
+                />
+
+                {/* Subtle colorful ambient gradient on bottom corner when expanded */}
+                {isExpanded && (
                   <div
-                    className={`pointer-events-none absolute -right-20 -bottom-20 h-52 w-52 rounded-full bg-gradient-to-br ${stage.accentGradient} blur-2xl transition-opacity duration-500`}
+                    className={`absolute -bottom-16 -right-16 w-64 h-64 bg-gradient-to-tl ${card.accentColor} blur-2xl pointer-events-none rounded-full`}
                   />
+                )}
 
-                  {/* Top Bar: Timeline Period, Status Tag & Interactive Action */}
-                  <div className="flex flex-wrap items-center justify-between gap-3 mb-6 relative z-10">
-                    <div className="flex items-center gap-3">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-extrabold bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700/80 shadow-xs">
-                        <Calendar className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                        {stage.period}
-                      </span>
+                {/* CLOSED STATE: Show only the background image and title '10th Class' / 'Intermediate' / 'B.Tech - EEE' */}
+                {!isExpanded && (
+                  <div className="absolute inset-0 p-4 sm:p-5 flex flex-row md:flex-col justify-between items-center z-10 pointer-events-none">
+                    {/* Top Circle Number Badge */}
+                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-white font-mono font-bold text-xs flex items-center justify-center shadow-lg">
+                      {card.cardNum}
+                    </div>
 
+                    {/* Closed Title: Reads horizontally on mobile row or vertically in desktop column */}
+                    <div className="flex-1 flex items-center justify-center overflow-hidden px-2">
                       <span
-                        className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold border ${stage.badgeStyle} shadow-xs`}
+                        className="text-white font-extrabold text-base sm:text-lg md:text-xl tracking-wider select-none whitespace-nowrap drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)] md:[writing-mode:vertical-rl] md:rotate-180 transition-transform duration-500 group-hover:scale-105"
                       >
-                        <Award className="w-3.5 h-3.5" />
-                        {stage.grade}
+                        {card.closedTitle}
                       </span>
                     </div>
 
-                    {isActive ? (
-                      <div className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/80 px-3 py-1 rounded-full border border-indigo-200 dark:border-indigo-800/80 shadow-xs">
-                        <span>Click card to slide next</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </div>
-                    ) : (
-                      <span className="text-xs font-medium text-slate-400 dark:text-slate-500">
-                        Click to view
-                      </span>
-                    )}
+                    {/* Bottom Action Icon / Expand hint */}
+                    <div className="w-7 h-7 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white/80 flex items-center justify-center opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all">
+                      <ArrowUpRight className="w-3.5 h-3.5" />
+                    </div>
                   </div>
+                )}
 
-                  {/* Degree Title & Institution Details */}
-                  <div className="flex items-start gap-4 sm:gap-5 mb-5 relative z-10">
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 shrink-0 border border-indigo-200/90 dark:border-indigo-800/70 shadow-md flex items-center justify-center transform transition-transform duration-300 group-hover:scale-105">
-                      {stage.icon}
+                {/* EXPANDED STATE: Reveal details smoothly */}
+                {isExpanded && (
+                  <div className="relative z-10 h-full p-6 sm:p-8 lg:p-10 flex flex-col justify-between overflow-y-auto overflow-x-hidden animate-fadeIn">
+                    {/* Watermark Number in background */}
+                    <div className="absolute top-4 right-8 font-mono font-black text-7xl sm:text-8xl text-white/5 pointer-events-none select-none">
+                      {card.cardNum}
                     </div>
 
-                    <div className="space-y-1.5">
-                      <h3 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                        {stage.degree}
-                      </h3>
-
-                      <div className="flex flex-wrap items-center gap-y-1 gap-x-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
-                        <span className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-                          <Zap className="w-3.5 h-3.5 text-amber-500" />
-                          {stage.institution}
+                    {/* Top Metadata Badges: Category Tag, Period, Grade */}
+                    <div className="space-y-4">
+                      <div className="flex flex-wrap items-center gap-2.5">
+                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold border backdrop-blur-md shadow-xs ${card.tagColor}`}>
+                          {card.categoryTag}
                         </span>
-                        {stage.location && (
-                          <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400 font-medium">
-                            <MapPin className="w-3.5 h-3.5 text-indigo-500" />
-                            {stage.location}
+
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-900/80 text-slate-200 border border-slate-700/80 backdrop-blur-md shadow-xs">
+                          <Calendar className="w-3.5 h-3.5 text-indigo-400" />
+                          {card.period}
+                        </span>
+
+                        <span className={`inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold border backdrop-blur-md shadow-xs ${card.badgeBg}`}>
+                          <Award className="w-3.5 h-3.5" />
+                          {card.grade}
+                        </span>
+                      </div>
+
+                      {/* Title & Institution Details */}
+                      <div className="space-y-2 pt-2">
+                        <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight leading-snug drop-shadow-md">
+                          {card.expandedTitle}
+                        </h3>
+
+                        <div className="flex flex-wrap items-center gap-y-1.5 gap-x-4 text-sm sm:text-base text-slate-200 font-medium">
+                          <span className="font-bold text-white flex items-center gap-1.5">
+                            {card.id === 'ssc' ? (
+                              <Building2 className="w-4 h-4 text-emerald-400" />
+                            ) : card.id === 'inter' ? (
+                              <BookOpen className="w-4 h-4 text-purple-400" />
+                            ) : (
+                              <GraduationCap className="w-4 h-4 text-cyan-400" />
+                            )}
+                            {card.institution}
                           </span>
+
+                          {card.location && (
+                            <span className="flex items-center gap-1 text-slate-300 font-normal text-xs sm:text-sm">
+                              <MapPin className="w-3.5 h-3.5 text-indigo-400" />
+                              {card.location}
+                            </span>
+                          )}
+                        </div>
+
+                        {card.branch && card.id !== 'ssc' && (
+                          <div className="text-xs sm:text-sm text-indigo-300 font-semibold tracking-wide">
+                            Specialization: {card.branch}
+                          </div>
                         )}
                       </div>
+
+                      {/* Narrative Description */}
+                      <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-normal pt-1 max-w-2xl">
+                        {card.description}
+                      </p>
+                    </div>
+
+                    {/* Key Highlights & Academic Milestones */}
+                    <div className="pt-6 border-t border-white/10 mt-6">
+                      <div className="text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-3 flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                        <span>Key Highlights &amp; Academic Milestones:</span>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        {card.highlights.map((highlight, hIdx) => (
+                          <div
+                            key={hIdx}
+                            className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-900/75 border border-white/10 backdrop-blur-md shadow-xs text-xs text-slate-100 font-medium hover:border-white/20 transition-colors"
+                          >
+                            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                            <span className="truncate">{highlight}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
-
-                  {/* Narrative Description */}
-                  {stage.description && (
-                    <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-5 relative z-10 font-normal">
-                      {stage.description}
-                    </p>
-                  )}
-
-                  {/* Key Highlights / Coursework Grid */}
-                  <div className="pt-4 border-t border-slate-100 dark:border-slate-800/70 relative z-10">
-                    <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2.5">
-                      Key Highlights & Coursework:
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {stage.highlights.map((itemText, hIdx) => (
-                        <div
-                          key={hIdx}
-                          className="flex items-center gap-2 p-2 rounded-xl bg-slate-50/90 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700/50 shadow-2xs text-xs text-slate-800 dark:text-slate-200 font-medium"
-                        >
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                          <span className="truncate">{itemText}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Bottom accent glow bar */}
-                  <div
-                    className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent transition-opacity duration-300 ${
-                      isActive ? 'opacity-100' : 'opacity-0'
-                    }`}
-                  />
-                </div>
+                )}
               </div>
             );
           })}
-        </div>
-
-        {/* Dynamic Dot Pagination Indicator */}
-        <div className="flex items-center justify-center gap-2.5 pt-4">
-          {stages.map((_, idx) => (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => setCurrentIndex(idx)}
-              aria-label={`Go to education slide ${idx + 1}`}
-              className={`transition-all duration-300 rounded-full cursor-pointer ${
-                idx === currentIndex
-                  ? 'w-9 h-2.5 bg-indigo-600 dark:bg-indigo-400 shadow-sm shadow-indigo-500/50'
-                  : 'w-2.5 h-2.5 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600'
-              }`}
-            />
-          ))}
         </div>
       </div>
     </section>

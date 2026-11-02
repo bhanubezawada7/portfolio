@@ -11,6 +11,7 @@ import { ResumeSection } from '../components/portfolio/ResumeSection';
 import { ContactSection } from '../components/portfolio/ContactSection';
 import { Footer } from '../components/layout/Footer';
 import { SectionSkeleton } from '../components/common/LoadingSkeleton';
+import { WateryBackground } from '../components/common/WateryBackground';
 
 import {
   getProjects,
@@ -85,7 +86,10 @@ export const HomePage: React.FC = () => {
   const { sectionVisibility } = settings;
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] flex flex-col selection:bg-indigo-500 selection:text-white transition-colors duration-500">
+    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] flex flex-col selection:bg-indigo-500 selection:text-white transition-colors duration-500 relative">
+      {/* Subtle watery/bubble-flowing animated background effect matching tap theme */}
+      <WateryBackground />
+
       {/* Smart Sticky Header */}
       <Navbar resumeUrl={settings.resumeUrl || resume.fileUrl} />
 
@@ -96,7 +100,7 @@ export const HomePage: React.FC = () => {
         )}
 
         {sectionVisibility?.about !== false && (
-          <AboutSection settings={settings} />
+          <AboutSection settings={settings} resumeUrl={settings.resumeUrl || resume.fileUrl} />
         )}
 
         {sectionVisibility?.skills !== false && (

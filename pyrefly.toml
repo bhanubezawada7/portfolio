@@ -1,0 +1,18 @@
+[errors]
+missing-import = "ignore"
+
+[tool.pyrefly]
+python-interpreter-path = "C:/Users/sayan/AppData/Local/Microsoft/WindowsApps/PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0/python.exe"
+search-path = [
+  "C:/Users/sayan/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0/LocalCache/local-packages/Python310/site-packages",
+  "C:/Program Files/WindowsApps/PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64__qbz5n2kfra8p0/lib/site-packages"
+]
+ignore-missing-imports = [
+  "numpy",
+  "numpy.*",
+  "scipy",
+  "scipy.*",
+  "tensorflow",
+  "tensorflow.*"
+]
+
